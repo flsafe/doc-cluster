@@ -1,4 +1,4 @@
-(ns ad-text-cluster.core
+(ns doc-cluster.core
   (:gen-class)
   (:require [clojure.string :as string])
   (:import (java.lang Math)))
@@ -16,8 +16,8 @@
   (ngrams 3 document))
 
 (defn term-frequencies
-  [document]
-  (frequencies (trigrams (word-chars document))))
+  [documents]
+  (frequencies (trigrams (word-chars documents))))
 
 (defn doc-frequencies
   [documents]
@@ -36,6 +36,16 @@
                 (let [[term term-df] pair]
                   (inverse-doc-frequency term term-df number-of-docs)))
                (doc-frequencies documents)))))
+
+(defn document-vectors
+  [documents]
+  (let [idf (inverse-doc-frequencies documents)]
+    (into {}
+      (map (fn [pair]
+            (let [[term term-f] pair]
+              (vector term (* term-f (idf term)))))
+           (map term-frequencies documents)))))
+
 
 (defn -main
   "I don't do a whole lot ... yet."

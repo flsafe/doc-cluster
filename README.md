@@ -1,6 +1,4 @@
-# ad-text-cluster
-
-FIXME: description
+# Document Classification Algorithms
 
 ## Installation
 
@@ -10,7 +8,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar ad-text-cluster-0.1.0-standalone.jar [args]
+    $ java -jar doc-cluster-0.1.0-standalone.jar [args]
 
 ## Options
 
