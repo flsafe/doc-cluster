@@ -16,8 +16,8 @@
   (ngrams 3 document))
 
 (defn term-frequencies
-  [documents]
-  (frequencies (trigrams (word-chars documents))))
+  [document]
+  (frequencies (trigrams (word-chars document))))
 
 (defn doc-frequencies
   [documents]
@@ -39,13 +39,12 @@
 
 (defn document-vectors
   [documents]
-  (let [idf (inverse-doc-frequencies documents)]
+  (let [idf (inverse-doc-frequencies documents)
+        term-freqs (map term-frequencies documents)]
     (into {}
-      (map (fn [pair]
-            (let [[term term-f] pair]
-              (vector term (* term-f (idf term)))))
-           (map term-frequencies documents)))))
-
+      (for [doc term-freqs
+           [term term-freq] doc]
+        [term (* term-freq (idf term))]))))
 
 (defn -main
   "I don't do a whole lot ... yet."
