@@ -2,6 +2,8 @@
   (:require [clojure.test :refer :all]
             [doc-cluster.core :refer :all]))
 
-(deftest a-test
+(deftest test-term-frequencies
   (testing "FIXME, I fail."
-    (is (= 0 1))))
+    (let [term-freqs (term-frequencies "aaaxx")]
+      (is (= (term-freqs '(\a \a \a)) 1))
+      (is (= (term-freqs '(\a \a \x)) 1)))))
