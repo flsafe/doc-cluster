@@ -48,10 +48,10 @@
 (defn doc-vectors
   [documents]
   (let [idf (inverse-doc-frequencies documents)
-        term-freqs (map term-frequencies documents)]
-    (into ()
-      (for [doc term-freqs [term term-freq] doc]
-        {term (* term-freq (idf term))}))))
+        doc-term-freqs (map term-frequencies documents)]
+    (for [doc doc-term-freqs]
+      (into {}
+        (for [[term term-freq] doc] [term (* term-freq (idf term))])))))
 
 (defn -main
   "I don't do a whole lot ... yet."
