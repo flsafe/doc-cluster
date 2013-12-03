@@ -21,7 +21,10 @@
 
 (defn doc-frequencies
   [documents]
-  (apply merge-with + {} (map term-frequencies documents)))
+  (let [terms (distinct (for [doc-trigrams (map trigrams documents) term doc-trigrams] term))]
+    (apply merge-with + {}
+      (for [t terms d documents :when ((term-frequencies d) t)]
+        {t 1}))))
 
 (defn inverse-doc-frequency
   [term term-df number-of-docs]
@@ -37,13 +40,12 @@
                   (inverse-doc-frequency term term-df number-of-docs)))
                (doc-frequencies documents)))))
 
-(defn document-vectors
+(defn doc-vectors
   [documents]
   (let [idf (inverse-doc-frequencies documents)
         term-freqs (map term-frequencies documents)]
     (into {}
-      (for [doc term-freqs
-           [term term-freq] doc]
+      (for [doc term-freqs [term term-freq] doc]
         [term (* term-freq (idf term))]))))
 
 (defn -main
