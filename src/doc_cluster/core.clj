@@ -19,12 +19,17 @@
   [document]
   (frequencies (trigrams (word-chars document))))
 
+(defn distinct-terms
+  [documents]
+  (distinct
+    (for [doc-trigrams (map trigrams documents) term doc-trigrams]
+      term)))
+
 (defn doc-frequencies
   [documents]
-  (let [terms (distinct (for [doc-trigrams (map trigrams documents) term doc-trigrams] term))]
     (apply merge-with + {}
-      (for [t terms d documents :when ((term-frequencies d) t)]
-        {t 1}))))
+      (for [t (distinct-terms documents) d documents :when ((term-frequencies d) t)]
+        {t 1})))
 
 (defn inverse-doc-frequency
   [term term-df number-of-docs]
