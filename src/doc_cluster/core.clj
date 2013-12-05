@@ -5,7 +5,10 @@
 
 (defn word-chars
   [s]
-  (string/lower-case (apply str (re-seq #"\w" s))))
+  (->> s
+      (re-seq #"\w")
+      (apply str)
+      string/lower-case))
 
 (defn ngrams
   [n s]
@@ -17,7 +20,10 @@
 
 (defn term-frequencies
   [document]
-  (frequencies (trigrams (word-chars document))))
+  (-> document
+      word-chars
+      trigrams
+      frequencies))
 
 (defn distinct-terms
   [documents]
