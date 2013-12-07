@@ -11,30 +11,26 @@
       string/lower-case))
 
 (defn ngrams
-  [n s]
+  [s & {:keys [n] :or {n 3}}]
   (partition n 1 s))
 
-(defn trigrams
-  [document]
-  (ngrams 3 document))
-
 (defn term-frequencies
-  [document]
-  (-> document
-      word-chars
-      trigrams
-      frequencies))
+  ([document & {:keys [n] :or {n 3}}]
+    (-> document
+        word-chars
+        (ngrams :n n)
+        frequencies)))
 
 (defn distinct-terms
-  [documents]
+  [documents & {:keys [n] :or {n 3}}]
   (distinct
-    (for [doc-trigrams (map trigrams documents) term doc-trigrams]
+    (for [doc-terms (map #(ngrams %  :n n) documents) term doc-terms]
       term)))
 
 (defn doc-frequencies
-  [documents]
+  [documents & {:keys [n] :or {n 3}}]
     (apply merge-with + {}
-      (for [t (distinct-terms documents) d documents :when ((term-frequencies d) t)]
+      (for [t (distinct-terms documents :n n) d documents :when ((term-frequencies d :n n) t)]
         {t 1})))
 
 (defn inverse-doc-frequency
@@ -43,18 +39,18 @@
                          (float term-df)))])
 
 (defn inverse-doc-frequencies
-  [documents]
+  [documents & {:keys [n] :or {n 3}}]
   (let [number-of-docs (count documents)]
     (into {}
           (map (fn [pair]
                 (let [[term term-df] pair]
                   (inverse-doc-frequency term term-df number-of-docs)))
-               (doc-frequencies documents)))))
+               (doc-frequencies documents :n n)))))
 
 (defn doc-vectors
-  [documents]
-  (let [idf (inverse-doc-frequencies documents)
-        doc-term-freqs (map term-frequencies documents)]
+  [documents & {:keys [n] :or {n 3}}]
+  (let [idf (inverse-doc-frequencies documents :n n)
+        doc-term-freqs (map #(term-frequencies % :n n) documents)]
     (for [doc doc-term-freqs]
       (into {}
         (for [[term term-freq] doc] [term (* term-freq (idf term))])))))
