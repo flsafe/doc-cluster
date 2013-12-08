@@ -12,31 +12,30 @@
 
 (defn ngrams
   [s & {:keys [n] :or {n 3}}]
-  (partition n 1 s))
+  (map #(apply str %)
+        (partition n 1 (word-chars s))))
 
 (defn term-frequencies
   ([document & {:keys [n] :or {n 3}}]
-    (-> document
-        word-chars
-        (ngrams :n n)
-        frequencies)))
+  (-> document
+      word-chars
+      (ngrams :n n)
+      frequencies)))
 
 (defn distinct-terms
   [documents & {:keys [n] :or {n 3}}]
-  (distinct
+  (into #{}
     (for [doc-terms (map #(ngrams %  :n n) documents) term doc-terms]
       term)))
 
 (defn doc-frequencies
   [documents & {:keys [n] :or {n 3}}]
-    (apply merge-with + {}
-      (for [t (distinct-terms documents :n n) d documents :when ((term-frequencies d :n n) t)]
-        {t 1})))
+  (frequencies (apply concat (map #(distinct-terms [%] :n n) documents))))
 
 (defn inverse-doc-frequency
   [term term-df number-of-docs]
-    [term (. Math log (/ number-of-docs
-                         (float term-df)))])
+  [term (. Math log (/ number-of-docs
+                       (float term-df)))])
 
 (defn inverse-doc-frequencies
   [documents & {:keys [n] :or {n 3}}]
