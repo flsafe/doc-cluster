@@ -54,6 +54,16 @@
       (into {}
         (for [[term term-freq] doc] [term (* term-freq (idf term))])))))
 
+(defn vector-len
+  [document-vector]
+  (Math/sqrt (reduce + (map #(* % %)
+                            (vals document-vector)))))
+
+(defn normalize-vector
+  [document-vector]
+    (into {}
+      (for [[term weight] document-vector] [term (/ weight (vector-len document-vector))])))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
