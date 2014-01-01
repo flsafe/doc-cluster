@@ -25,12 +25,12 @@
 (defn distinct-terms
   [documents & {:keys [n] :or {n 3}}]
   (into #{}
-    (for [doc-terms (map #(ngrams %  :n n) documents) term doc-terms]
-      term)))
+        (mapcat #(ngrams % :n n)
+                  documents)))
 
 (defn doc-frequencies
   [documents & {:keys [n] :or {n 3}}]
-  (frequencies (apply concat (map #(distinct-terms [%] :n n) documents))))
+  (frequencies (mapcat #(distinct-terms [%] :n n) documents)))
 
 (defn inverse-doc-frequency
   [term term-df number-of-docs]
