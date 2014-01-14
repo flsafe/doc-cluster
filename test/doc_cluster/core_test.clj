@@ -14,17 +14,11 @@
           expected {"aaa" 1 "bbb" 1}]
       (is (= (doc-frequencies documents) expected)))))
 
-(deftest test-inverse-doc-frequencies
-  (testing "Test document frequences"
-    (let [documents '("aaa" "aaabbb")
-          expected {"bbb" 0.6931471805599453, "abb" 0.6931471805599453, "aab" 0.6931471805599453, "aaa" 0.0}]
-      (is (= (inverse-doc-frequencies documents) expected)))))
-
-(deftest test-vector-length
+(deftest test-vector-magnitude
   (testing "Test normalize vector"
     (let [input-vector {"a" 1}
           expected-length 1.0]
-      (is (= (vector-len input-vector)
+      (is (= (vector-magnitude input-vector)
              expected-length)))))
 
 (deftest test-normalize-vector
