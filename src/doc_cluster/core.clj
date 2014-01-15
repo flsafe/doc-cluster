@@ -50,14 +50,6 @@
                  (inverse-doc-frequency term df ndocs))
                (doc-frequencies documents :n n)))))
 
-(defn doc-vectors
-  [documents & {:keys [n] :or {n 3}}]
-  (let [idf (inverse-doc-frequencies (map :text documents) :n n)]
-    (map (fn [document]
-           (let [tf-doc (term-frequencies (:text document) :n n)]
-            (assoc document :vector (into {} (for [[term tf] tf-doc] [term (* tf (idf term))])))))
-         documents)))
-
 (defn vector-len
   [document-vector]
   (Math/sqrt (reduce + (map #(* % %)
@@ -68,7 +60,11 @@
     (into {}
       (for [[term weight] document-vector] [term (/ weight (vector-len document-vector))])))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(defn doc-vectors
+  [documents & {:keys [n] :or {n 3}}]
+  (let [idf (inverse-doc-frequencies (map :text documents) :n n)]
+    (map (fn [document]
+           (let [tf-doc (term-frequencies (:text document) :n n)]
+            (assoc document :vector (normalize-vector (into {} (for [[term tf] tf-doc] [term (* tf (idf term))]))))))
+         documents)))
+

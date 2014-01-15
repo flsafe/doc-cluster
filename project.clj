@@ -6,5 +6,5 @@
   :dependencies [[org.clojure/clojure "1.5.1"],
                  [org.clojure/java.jdbc "0.3.0-beta2"]
                  [mysql/mysql-connector-java "5.1.25"]]
-  :main doc-cluster.core
+  :main doc-cluster.runner
   :profiles {:uberjar {:aot :all}})
