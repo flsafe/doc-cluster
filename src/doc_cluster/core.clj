@@ -3,17 +3,22 @@
   (:require [clojure.string :as string])
   (:import (java.lang Math)))
 
+; Vocabulary
+; df  - Document frequency
+; idf - Inverse document frequency
+; tf  - Term frequency
+
 (defn word-chars
-  [s]
-  (->> s
+  [document]
+  (->> document
       (re-seq #"\w")
       (apply str)
       string/lower-case))
 
 (defn ngrams
-  [s & {:keys [n] :or {n 3}}]
+  [document & {:keys [n] :or {n 3}}]
   (map #(apply str %)
-        (partition n 1 (word-chars s))))
+        (partition n 1 (word-chars document))))
 
 (defn term-frequencies
   ([document & {:keys [n] :or {n 3}}]
@@ -33,26 +38,25 @@
   (frequencies (mapcat #(distinct-terms [%] :n n) documents)))
 
 (defn inverse-doc-frequency
-  [term term-df number-of-docs]
-  [term (. Math log (/ number-of-docs
-                       (float term-df)))])
+  [term df ndocs]
+  [term (. Math log (/ ndocs
+                       (float df)))])
 
 (defn inverse-doc-frequencies
   [documents & {:keys [n] :or {n 3}}]
-  (let [number-of-docs (count documents)]
+  (let [ndocs (count documents)]
     (into {}
-          (map (fn [pair]
-                (let [[term term-df] pair]
-                  (inverse-doc-frequency term term-df number-of-docs)))
+          (map (fn [[term df]]
+                 (inverse-doc-frequency term df ndocs))
                (doc-frequencies documents :n n)))))
 
 (defn doc-vectors
   [documents & {:keys [n] :or {n 3}}]
   (let [idf (inverse-doc-frequencies documents :n n)
-        doc-term-freqs (map #(term-frequencies % :n n) documents)]
-    (for [doc doc-term-freqs]
+        tf-docs  (map #(term-frequencies % :n n) documents)]
+    (for [tf-doc tf-docs]
       (into {}
-        (for [[term term-freq] doc] [term (* term-freq (idf term))])))))
+        (for [[term tf] tf-doc] [term (* tf (idf term))])))))
 
 (defn vector-len
   [document-vector]
