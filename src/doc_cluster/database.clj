@@ -13,7 +13,7 @@
 
 (defn get-docs
   []
-  (j/query db ["SELECT id, publisher_id, business_id, text FROM ads WHERE processed = true LIMIT 2;"]
+  (j/query db ["SELECT id, publisher_id, business_id, text FROM ads WHERE processed = true LIMIT 1000;"]
            :row-fn (fn [row]
                      {:text (:text row)
                       :class (:business_id row)})))

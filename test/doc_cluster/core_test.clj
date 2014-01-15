@@ -20,6 +20,13 @@
           expected {"bbb" 0.6931471805599453, "abb" 0.6931471805599453, "aab" 0.6931471805599453, "aaa" 0.0}]
       (is (= (inverse-doc-frequencies documents) expected)))))
 
+(deftest test-doc-vectors
+  (testing "Test document frequences"
+    (let [documents '({:text "aaa"} {:text "aaabbb"})
+          expected [{:text "aaabbb" :vector {"bbb" 0.6931471805599453, "abb" 0.6931471805599453, "aab" 0.6931471805599453}}
+                    {:text "aaa" :vector {"aaa" 0.0}}]]
+      (is (= (doc-vectors documents) expected)))))
+
 (deftest test-vector-length
   (testing "Test normalize vector"
     (let [input-vector {"a" 1}

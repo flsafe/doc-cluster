@@ -52,11 +52,11 @@
 
 (defn doc-vectors
   [documents & {:keys [n] :or {n 3}}]
-  (let [idf (inverse-doc-frequencies documents :n n)
-        tf-docs  (map #(term-frequencies % :n n) documents)]
-    (for [tf-doc tf-docs]
-      (into {}
-        (for [[term tf] tf-doc] [term (* tf (idf term))])))))
+  (let [idf (inverse-doc-frequencies (map :text documents) :n n)]
+    (map (fn [document]
+           (let [tf-doc (term-frequencies (:text document) :n n)]
+            (assoc document :vector (into {} (for [[term tf] tf-doc] [term (* tf (idf term))])))))
+         documents)))
 
 (defn vector-len
   [document-vector]
