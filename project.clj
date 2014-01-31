@@ -5,6 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"],
                  [org.clojure/java.jdbc "0.3.0-beta2"]
-                 [mysql/mysql-connector-java "5.1.25"]]
+                 [mysql/mysql-connector-java "5.1.25"]
+                 [incanter "1.5.4"]
+                 [org.clojure/math.combinatorics "0.0.7"]]
   :main doc-cluster.runner
   :profiles {:uberjar {:aot :all}})

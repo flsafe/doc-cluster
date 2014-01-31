@@ -6,6 +6,5 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println (pr-str (dc/doc-vectors (db/get-docs))))
   (println (pr-str (dc/doc-vectors (db/get-docs)))))
 
