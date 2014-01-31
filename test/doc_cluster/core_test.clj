@@ -20,17 +20,17 @@
           expected {"bbb" 0.6931471805599453, "abb" 0.6931471805599453, "aab" 0.6931471805599453, "aaa" 0.0}]
       (is (= (inverse-doc-frequencies documents) expected)))))
 
-(deftest test-doc-vectors
-  (testing "Test document frequences"
-    (let [documents '({:text "aaa"} {:text "aaabbb"})
-          expected [{:text "aaabbb" :vector {"bbb" 0.6931471805599453, "abb" 0.6931471805599453, "aab" 0.6931471805599453}}
-                    {:text "aaa" :vector {"aaa" 0.0}}]]
-      (is (= (doc-vectors documents) expected)))))
-
 (deftest test-vector-length
-  (testing "Test normalize vector"
+  (testing "Test vector length"
     (let [input-vector {"a" 1}
           expected-length 1.0]
+      (is (= (vector-len input-vector)
+             expected-length)))))
+
+(deftest test-vector-length-sqrt-1
+  (testing "Test vector length"
+    (let [input-vector {"x" 1.0 "y" 0.0}
+          expected-length (Math/sqrt 1.0)]
       (is (= (vector-len input-vector)
              expected-length)))))
 
@@ -40,3 +40,15 @@
         expected {"a" 0.5547001962252291 "b" 0.8320502943378437}]
     (is (= (normalize-vector input)
             expected))))
+
+(deftest test-cosine-similarity
+  []
+  (let [a {"x" 1.0 "y" 0.0}
+        b {"x" 0.0 "y" 1.0}]
+    (is (= (cosine-similarity a b) 0.0))))
+
+(deftest test-cosine-similarity-45
+  []
+  (let [a {"x" 1.0 "y" 1.0}
+        b {"x" 1.0 "y" 0.0}]
+    (is (= (cosine-similarity a b) 0.7071067811865475))))

@@ -73,10 +73,10 @@
   [a b]
   (let [terms (set (concat (keys a) (keys b)))]
      (/ (reduce (fn [sum term]
-               (+ sum (* (get a term 0.0)
-                         (get b term 0.0))))
-              0
-              terms))
-         (* (vector-len a) (vector-len b))))
+                  (+ sum (* (get a term 0.0)
+                            (get b term 0.0))))
+                0
+                terms)
+         (* (vector-len a) (vector-len b)))))
 
-  (cosine-similarity {"x" 1 "y" 0} {"x" 0 "y" 1})
+
