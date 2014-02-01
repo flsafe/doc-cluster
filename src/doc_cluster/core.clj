@@ -57,8 +57,9 @@
 
 (defn normalize-vector
   [document-vector]
+  (let [veclen (vector-len document-vector)]
     (into {}
-      (for [[term weight] document-vector] [term (/ weight (vector-len document-vector))])))
+      (for [[term weight] document-vector] [term (/ weight veclen)]))))
 
 (defn doc-vectors
   [documents & {:keys [n] :or {n 3}}]
