@@ -8,5 +8,6 @@
                  [mysql/mysql-connector-java "5.1.25"]
                  [incanter "1.5.4"]
                  [org.clojure/math.combinatorics "0.0.7"]]
+  :jvm-opts ["-Xmx6g"]
   :main doc-cluster.runner
   :profiles {:uberjar {:aot :all}})

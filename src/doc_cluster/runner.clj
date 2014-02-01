@@ -9,7 +9,7 @@
 (defn get-business-docs
   []
   (->(db/business-docs)
-     (dc/doc-vectors :n 3)))
+     (dc/doc-vectors :n 6)))
 
 (defn group-by-class
   [bdocs]
@@ -29,12 +29,11 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (view
-    (histogram
-      (flatten
-       (map (fn [pair-group]
-              (map (fn [[doc1 doc2]]
-                     (dc/cosine-similarity doc1 doc2))
-                    pair-group))
-              (get-pair-groups))))))
+  (doseq [pair-group (get-pair-groups)]
+    (view
+      (histogram
+         (flatten
+           (map (fn [[doc1 doc2]]
+                  (dc/cosine-similarity doc1 doc2))
+                 pair-group))))))
 

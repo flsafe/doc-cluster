@@ -11,9 +11,8 @@
 (defn word-chars
   [document]
   (->> document
-      (re-seq #"\w")
-      (apply str)
-      string/lower-case))
+      (re-seq #"\w+")
+      (map string/lower-case)))
 
 (defn ngrams
   [document & {:keys [n] :or {n 3}}]
@@ -24,14 +23,13 @@
   ([document & {:keys [n] :or {n 3}}]
   (-> document
       word-chars
-      (ngrams :n n)
       frequencies)))
 
 (defn distinct-terms
   [documents & {:keys [n] :or {n 3}}]
   (into #{}
-        (mapcat #(ngrams % :n n)
-                  documents)))
+        (mapcat word-chars
+                documents)))
 
 (defn doc-frequencies
   [documents & {:keys [n] :or {n 3}}]
